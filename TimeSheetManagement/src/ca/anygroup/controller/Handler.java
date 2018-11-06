@@ -264,4 +264,34 @@ public class Handler {
 		}
 	}
 	
+	@RequestMapping("/revokeAuth/{email}")
+	public String unAuthorize(@PathVariable("email") String email,ModelMap model)
+	{
+		System.out.println(email);
+		if(new DatabaseHandler().unAuthorizeUser(email)) {
+			model.put("msg", "User Successfull unauthorised");
+			return "authorize";
+		}
+		else {
+			
+		model.put("msg", "Something Went Wrong :(");
+		return "authorize";
+		}
+	}
+	
+	@RequestMapping("/deleteUser/{email}")
+	public String deleteUser(@PathVariable("email") String email,ModelMap model)
+	{
+		System.out.println(email);
+		if(new DatabaseHandler().deleteUser(email)) {
+			model.put("msg", "User Successfull deleted");
+			return "authorize";
+		}
+		else {
+			
+		model.put("msg", "Something Went Wrong :(");
+		return "authorize";
+		}
+	}
+	
 }

@@ -202,7 +202,7 @@ public class DatabaseHandler {
 		connect();
 		ArrayList<User> list = new ArrayList<>();
 		try {
-			pst = con.prepareStatement("select auth.email,auth.name,company.name from auth inner join company on auth.companyid=company.id where isvalid=0");
+			pst = con.prepareStatement("select auth.email,auth.name,company.name from auth inner join company on auth.companyid=company.id where isvalid=0 and email <> 'admin'");
 			ResultSet rs = pst.executeQuery();
 			while(rs.next())
 			{
@@ -220,6 +220,33 @@ public class DatabaseHandler {
 		
 		return list;
 	}
+	
+	public ArrayList<User> getAuthorisedUsers(){
+		connect();
+		ArrayList<User> list = new ArrayList<>();
+		try {
+			pst = con.prepareStatement("select auth.email,auth.name,company.name from auth inner join company on auth.companyid=company.id where isvalid=1 and email <> 'admin'");
+			ResultSet rs = pst.executeQuery();
+			while(rs.next())
+			{
+				list.add(new User(rs.getString(1),rs.getString(2),rs.getString(3)));
+			}
+			
+			return list;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally {
+			disconnect();
+		}
+		
+		return list;
+	}
+	
+	
+	
+	
 	public boolean addCompany(String companyName)
 	{
 		connect();
@@ -243,7 +270,7 @@ public class DatabaseHandler {
 		
 			connect();
 			try {
-				System.out.println(email);
+				
 				pst = con.prepareStatement("update auth set isvalid=1 where email=?");
 				
 				pst.setString(1, email);
@@ -251,6 +278,71 @@ public class DatabaseHandler {
 				int i = pst.executeUpdate();
 				if(i>0) {
 					return true;
+				}
+				else {
+					return false;
+				}
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			finally{
+				disconnect();
+			}
+			return false;
+		}
+	
+	public boolean unAuthorizeUser(String email)
+	{
+		
+			connect();
+			try {
+				
+				pst = con.prepareStatement("update auth set isvalid=0 where email=?");
+				
+				pst.setString(1, email);
+				
+				int i = pst.executeUpdate();
+				if(i>0) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			finally{
+				disconnect();
+			}
+			return false;
+		}
+	
+	public boolean deleteUser(String email)
+	{
+		
+			connect();
+			try {
+				
+				pst = con.prepareStatement("delete from timesheet where email=?");
+				
+				pst.setString(1, email);
+				
+				int i = pst.executeUpdate();
+				if(i>=0) {
+					pst = con.prepareStatement("delete from auth where email=?");
+					
+					pst.setString(1, email);
+					
+					int j = pst.executeUpdate();
+						if(j>0)
+						{
+							return true;
+						}
+						else {
+							return false;
+						}
 				}
 				else {
 					return false;
