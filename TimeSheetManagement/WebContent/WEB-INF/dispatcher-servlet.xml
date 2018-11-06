@@ -17,8 +17,7 @@
 
         <mvc:annotation-driven/>
         <context:component-scan base-package="ca.anygroup.controller"/>
-
-        <bean id="ViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<bean id="ViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="ViewClass" value="org.springframework.web.servlet.view.JstlView"></property>
             <property name="prefix">
                 <value>/</value>
@@ -27,4 +26,11 @@
                 <value>.jsp</value>
             </property>
         </bean>
+        
+        <mvc:resources mapping="/resources/**" location="/resources/" />
+<mvc:annotation-driven />
+       
+ 
+		
+   
 </beans>

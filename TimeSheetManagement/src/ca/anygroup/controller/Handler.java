@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -25,8 +26,11 @@ import ca.anygroup.validation.PasswordValidation;
 @Controller
 public class Handler {
 	@RequestMapping(value="/getweek", method=RequestMethod.POST)
-	public String timesheet(@RequestParam("week") String week, ModelMap map,HttpServletRequest req)
+	public String timesheet(@RequestParam("week") String week, ModelMap map,HttpServletRequest req, HttpServletResponse res)
 	{
+		if(req.getSession().getAttribute("authorisedAuth")==null){
+			return "login";
+			}
 		String periodFrom;
 		String periodTo;
 		if(week.equals("week1"))
@@ -62,14 +66,14 @@ public class Handler {
 	}
 	
 	@RequestMapping("/register")
-	public ModelAndView register(@RequestParam("email") String email, @RequestParam("password") String password,@RequestParam("cpassword") String cPassword,@RequestParam("name") String name)
+	public ModelAndView register(@RequestParam("email") String email, @RequestParam("password") String password,@RequestParam("cpassword") String cPassword,@RequestParam("name") String name,HttpServletRequest req)
 	{
 	PasswordValidation checkPass =	new PasswordValidation();
 	ModelAndView model = new ModelAndView("register");
 		if(checkPass.passValidation(password, cPassword)) {
 			if(new DatabaseHandler().checkExisting(email)) {
 				if(new DatabaseHandler().register(name, email, password)) {
-					model.addObject("msg", "Successfully created account, <a href='login.jsp'>Login</a> with your email '"+email+ "'");
+					model.addObject("msg", "Successfully created account, <a href='"+ req.getContextPath()+"/login.jsp'>Login</a> with your email '"+email+ "'");
 					return model;
 				}
 				else {
@@ -110,7 +114,9 @@ public class Handler {
 	@RequestMapping(value="/submitTimesheet" , method=RequestMethod.POST)
 	public String submitTimesheet(@RequestParam Map<String,String> map, Period period, HttpServletRequest req,ModelMap model)
 	{
-		
+		if(req.getSession().getAttribute("authorisedAuth")==null){
+			return "login";
+			}
 		String message =new TimesheetHandler().updateTimesheet(map, period, req);
 		model.put("msg", message);
 		return "authorisedUser";
@@ -168,12 +174,12 @@ public class Handler {
 					else {
 					session.setAttribute("authorisedAuth", new User(username,db.user,db.company));
 					session.setMaxInactiveInterval(900);
-					return "authorisedUser";
+					return "redirect:authorisedUser.jsp";
 					}
 				}
 				else {
 					session.setAttribute("unauthorisedAuth", new User(username,db.user,db.company));
-					return "unauthorisedUser";
+					return "redirect:unauthorisedUser.jsp";
 				}
 			}
 		}
