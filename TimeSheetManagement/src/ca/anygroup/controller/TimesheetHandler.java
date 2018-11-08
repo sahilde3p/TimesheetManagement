@@ -1,5 +1,6 @@
 package ca.anygroup.controller;
 
+import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class TimesheetHandler {
 	
 	public String updateTimesheet(Map<String,String> map, Period period, HttpServletRequest req)
 	{
+		DecimalFormat format = new DecimalFormat("#.##");
 		String message = "Successfully updated timesheet";
 		Timesheet[] day = new Timesheet[7];
 		int i =0;
