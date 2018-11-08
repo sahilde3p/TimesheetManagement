@@ -2,6 +2,7 @@ package ca.anygroup.controller;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import ca.anygroup.beans.Period;
 import ca.anygroup.beans.Timesheet;
 import ca.anygroup.beans.UpdatedTimesheet;
+import ca.anygroup.beans.UpdatedTimesheetWithNameAndDate;
 import ca.anygroup.beans.User;
 import ca.anygroup.database.DatabaseHandler;
 
@@ -218,6 +220,7 @@ public class TimesheetHandler {
 		UpdatedTimesheet updated = new UpdatedTimesheet();
 		for(Timesheet t : list)
 		{
+			
 			String day = t.getDate().getDayOfWeek().name();
 			switch(day)
 			{
@@ -263,6 +266,65 @@ public class TimesheetHandler {
 			
 		}
 		return updated;
+	}
+	
+	public Map<String,UpdatedTimesheetWithNameAndDate> updatedTimesheetGenerator(Map<String,ArrayList<Timesheet>> map)
+	{
+		
+		Map<String,UpdatedTimesheetWithNameAndDate> timesheetMap = new HashMap<>();
+		for(Map.Entry<String, ArrayList<Timesheet>> m : map.entrySet())
+		{
+			UpdatedTimesheetWithNameAndDate updated = new UpdatedTimesheetWithNameAndDate();
+			updated.name = m.getKey();
+			for(Timesheet t :m.getValue())
+			{
+			updated.period = t.getPeriod();
+			String day = t.getDate().getDayOfWeek().name();
+			switch(day)
+			{
+			case "MONDAY" : 
+				updated.day[0][0]=(t.getHours());
+				updated.day[0][1] =(t.getOverTime());
+				break;
+				
+			case "TUESDAY" : 
+				updated.day[1][0]=(t.getHours());
+				updated.day[1][1]=(t.getOverTime());
+				break;
+				
+			case "WEDNESDAY" : 
+				updated.day[2][0]=(t.getHours());
+				updated.day[2][1]=(t.getOverTime());
+				break;
+				
+			case "THURSDAY" : 
+				updated.day[3][0]=(t.getHours());
+				updated.day[3][1]=(t.getOverTime());
+				break;
+				
+			case "FRIDAY" : 
+				updated.day[4][0]=(t.getHours());
+				updated.day[4][1]=(t.getOverTime());
+				break;
+				
+			case "SATURDAY" : 
+				updated.day[5][0]=(t.getHours());
+				updated.day[5][1]=(t.getOverTime());
+				break;
+				
+			case "SUNDAY" : 
+				updated.day[6][0]=(t.getHours());
+				updated.day[6][1]=(t.getOverTime());
+				break;
+			
+			}
+			
+			
+			}
+			timesheetMap.put(m.getKey(), updated);
+			
+		}
+		return timesheetMap;
 	}
 	
 

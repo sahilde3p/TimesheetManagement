@@ -5,15 +5,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.ArrayList;
-
-import org.springframework.web.bind.annotation.RequestParam;
+import java.util.HashMap;
+import java.util.Map;
 
 import ca.anygroup.beans.Company;
 import ca.anygroup.beans.Period;
 import ca.anygroup.beans.Timesheet;
 import ca.anygroup.beans.UpdatedTimesheet;
+import ca.anygroup.beans.UpdatedTimesheetWithNameAndDate;
 import ca.anygroup.beans.User;
 import ca.anygroup.controller.TimesheetHandler;
 
@@ -487,6 +487,118 @@ finally {
 		return null;
 	}
 	
+	public Map<String,UpdatedTimesheetWithNameAndDate> getAllTimesheets(int companyId, int periodId)
+	{
+		Period p = getPeriodById(periodId);
+		connect();
+		Map<String,ArrayList<Timesheet>> map = new HashMap<>();
+		
+		try {
+			pst = con.prepareStatement("select  timesheet.email, auth.name from timesheet inner join auth on auth.email = timesheet.email where auth.companyid = ? and timesheet.periodid =?");
+			pst.setInt(1, companyId);
+			pst.setInt(2, periodId);
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				
+				pst = con.prepareStatement("select auth.name,periodid,day,hours,overtime from timesheet inner join auth on auth.email = timesheet.email where timesheet.email =?");
+				pst.setString(1, rs.getString(1));
+				ResultSet r = pst.executeQuery();
+				ArrayList<Timesheet> list = new ArrayList<>();
+				
+				
+				while(r.next())
+				{
+				Timesheet timesheet = new Timesheet();
+				timesheet.setPeriod(p);
+				timesheet.setHours(r.getDouble(4));
+				timesheet.setOverTime(r.getDouble(5));
+				timesheet.setDate(r.getDate(3).toLocalDate());
+				list.add(timesheet);
+				}
+				map.put(rs.getString(2), list);
+			}
+			return new TimesheetHandler().updatedTimesheetGenerator(map);
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+		finally {
+			
+			disconnect();
+		}
+		return new HashMap<String,UpdatedTimesheetWithNameAndDate>();
+	}
+	
+	public Period getPeriodById(int id)
+	{
+		connect();
+		try {
+			pst = con.prepareStatement("select * from period where id =?");
+			pst.setInt(1, id);
+		ResultSet rs =	pst.executeQuery();
+		rs.next();
+		return new Period(rs.getDate("from_date").toLocalDate(),rs.getDate("to_date").toLocalDate(),id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			
+			disconnect();
+		}
+		return new Period();
+	}
+	
+	public ArrayList<Timesheet> returnHours(String email,int periodId)
+	{
+		connect();
+		ArrayList<Timesheet> list = new ArrayList<>();
+		try {
+			pst =  con.prepareStatement("select period.from_date,period.to_date,day,hours,overtime from timesheet inner join period on timesheet.periodid = period.id where email =? and periodid=?");
+			pst.setString(1, email);
+			pst.setInt(2, periodId);
+			
+			ResultSet rs = pst.executeQuery();
+			while(rs.next())
+			{
+				list.add(new Timesheet(rs.getDate(3).toLocalDate(), rs.getDouble(4), rs.getDouble(5), new Period(rs.getDate(1).toLocalDate(), rs.getDate(2).toLocalDate(),periodId)));
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally {
+			
+			disconnect();
+		}
+		return list;
+	}
+	
+	public ArrayList<Period> getPeriodByCompany(int companyId)
+	{
+		connect();
+		ArrayList<Period> list = new ArrayList<>();
+		try {
+			pst = con.prepareStatement("select distinct period.from_date, period.to_date,period.id from timesheet inner join auth on auth.email = timesheet.email inner join period on period.id = timesheet.periodid where auth.companyid =?");
+			pst.setInt(1, companyId);
+			ResultSet rs = pst.executeQuery();
+			while(rs.next())
+			{
+				list.add(new Period(rs.getDate(1).toLocalDate(),rs.getDate(2).toLocalDate(),rs.getInt(3)));
+			}
+			return list;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		finally {
+			
+			disconnect();
+		}
+		return list;
+	}
+	
+	
 	public UpdatedTimesheet getHours(String email, Period period)
 	{
 		int id = getPeriod(period);
@@ -518,30 +630,7 @@ finally {
 		return new UpdatedTimesheet();
 	}
 	
-	public ArrayList<Timesheet> returnHours(String email,int periodId)
-	{
-		connect();
-		ArrayList<Timesheet> list = new ArrayList<>();
-		try {
-			pst =  con.prepareStatement("select period.from_date,period.to_date,day,hours,overtime from timesheet inner join period on timesheet.periodid = period.id where email =? and periodid=?");
-			pst.setString(1, email);
-			pst.setInt(2, periodId);
-			
-			ResultSet rs = pst.executeQuery();
-			while(rs.next())
-			{
-				list.add(new Timesheet(rs.getDate(3).toLocalDate(), rs.getDouble(4), rs.getDouble(5), new Period(rs.getDate(1).toLocalDate(), rs.getDate(2).toLocalDate(),periodId)));
-			}
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-		finally {
-			
-			disconnect();
-		}
-		return list;
-	}
+	
 	
 	
 	

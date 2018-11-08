@@ -294,4 +294,19 @@ public class Handler {
 		}
 	}
 	
+	@RequestMapping("/getPeriodByCompany")
+	public String getPeriodByCompany(int companyId,ModelMap map)
+	{
+		map.put("periods", new DatabaseHandler().getPeriodByCompany(companyId));
+		map.put("companyId", companyId);
+		return "getTimesheet";
+	}
+	
+	@RequestMapping("/getAllTimesheets")
+	public String getPeriodByCompany(@RequestParam("companyId") String cId , @RequestParam("periodId") String pId,ModelMap map)
+	{
+		map.put("timesheet", new DatabaseHandler().getAllTimesheets(Integer.parseInt(cId), Integer.parseInt(pId)));
+		return "getTimesheet";
+	}
+	
 }
