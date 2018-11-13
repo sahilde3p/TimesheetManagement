@@ -16,11 +16,18 @@ if(session.getAttribute("adminAuth")==null){
 </head>
 <body>
 Hello ${adminAuth}
-<br><br>
-<a href="/TimeSheetManagement/authorize.jsp">Grant or forfeit user privileges</a>
-<br>
-<a href="/TimeSheetManagement/addCompanies.jsp">Add Companies</a>
+<ul>
+<li><a href="${pageContext.request.contextPath}/authorize.jsp">Grant or forfeit user privileges</a></li>
 
+<li><a href="${pageContext.request.contextPath}/addCompanies.jsp">Add Companies</a></li>
+
+<li>Get Timesheets
+	<ul>
+		<li><a href="${pageContext.request.contextPath}/getTimesheet.jsp">Get Timesheet by Company</a></li>
+		<li><a href="${pageContext.request.contextPath}/getInfo.jsp">Get Timesheet by Employee</a></li>
+	</ul>
+</li>
+</ul>
 <form action="signout" method="post">
 <input type ="hidden" name="logout" value="adminAuth"/>
 <input type ="submit" value="Signout"/>

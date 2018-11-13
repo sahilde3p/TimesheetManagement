@@ -61,14 +61,14 @@ else if(session.getAttribute("adminAuth")!=null){
 				<form action='register' method='post' class="login100-form validate-form">
 				
 					<div class="wrap-input100 validate-input m-b-26" data-validate="Name is required">
-						<span class="label-input100">Name</span>
-						<input class="input100" type="text" name="name" placeholder="Enter name">
+						<span class="label-input100">Full Name</span>
+						<input class="input100" type="text" name="name" value="${name}" placeholder="Enter full name">
 						<span class="focus-input100"></span>
 					</div>
 				
 					<div class="wrap-input100 validate-input m-b-26" data-validate="Email is required">
 						<span class="label-input100">Email</span>
-						<input class="input100" type="text" name="email" placeholder="Enter email">
+						<input class="input100" type="text" name="email" value="${email}" placeholder="Enter email">
 						<span class="focus-input100"></span>
 					</div>
 

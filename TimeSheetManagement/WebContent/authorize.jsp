@@ -21,6 +21,15 @@ table {
 <title>Access Privileges</title>
 </head>
 <body>
+<table><tr><td><a href="${pageContext.request.contextPath}/adminUser.jsp"><button>HOME</button></a>
+</td><td><form id="sign" action="${pageContext.request.contextPath}/signout" method="post">
+<input type ="hidden" name="logout" value="authorisedAuth"/>
+<input type ="submit" class="login100-form-btn" value="Signout"/>
+</form></td></tr>
+
+
+</table>
+<br><br>
 <table>
 <tr><th>Unauthorised Users</th></tr>
 <tr><th>Name</th><th>Company</th><th>Access Permission</th></tr>

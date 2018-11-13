@@ -10,13 +10,25 @@ if(session.getAttribute("adminAuth")==null){
 	}%>
 
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Add Company</title>
 </head>
 <body>
-<form action="registerCompany" method="post">
-<input type="text" name="companyName">
+<table><tr><td><a href="${pageContext.request.contextPath}/adminUser.jsp"><button>HOME</button></a>
+</td><td><form id="sign" action="${pageContext.request.contextPath}/signout" method="post">
+<input type ="hidden" name="logout" value="authorisedAuth"/>
+<input type ="submit" class="login100-form-btn" value="Signout"/>
+</form></td></tr>
 
-<input type="submit" value="Submit">
+
+</table>
+<br><br>
+<form action="registerCompany" method="post">
+
+<table>
+	<tr><td>Company Name: </td><td><input type="text" name="companyName"></td></tr>
+
+<tr><td> <input type="submit" value="Submit"></td><td></tr>
+</table>
 
 </form>
 ${msg}

@@ -78,17 +78,23 @@ public class Handler {
 				}
 				else {
 					model.addObject("msg", "Database Error!! Please trying again");
+					model.addObject("email", email);
+					model.addObject("name", name);
 					return model;
 				}
 			}
 			else {
 				model.addObject("msg", "This email is already registered with another account");
+				model.addObject("email", email);
+				model.addObject("name", name);
 				return model;
 			}
 		}
 		else {
 			
 			model.addObject("msg", checkPass.passValidation);
+			model.addObject("email", email);
+			model.addObject("name", name);
 			return model;
 			
 		}

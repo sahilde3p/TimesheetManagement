@@ -2,6 +2,7 @@ package ca.anygroup.beans;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Period {
@@ -42,7 +43,7 @@ public class Period {
 	}
 	@Override
 	public String toString() {
-		return "Period [periodFrom=" + getPeriodFrom() + ", periodTo=" + getPeriodTo() + "]";
+		return  getPeriodFrom().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")) + " to " + getPeriodTo().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
 	}
 
 }
