@@ -4,6 +4,7 @@
     <%@page import="ca.anygroup.beans.UpdatedTimesheet" %>
      <%@page import="ca.anygroup.beans.User" %>
     <%@page import="java.time.format.*" %>
+    <%@page import="java.util.TimeZone" %>
 
 
 
@@ -129,22 +130,29 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
     
       <div class="w3-container w3-card w3-white w3-margin-bottom">
        	
-       		<% LocalDate dateNow = LocalDate.now();
+       		<% LocalDate dateNow = LocalDate.now(TimeZone.getTimeZone("America/New_York").toZoneId());
 		LocalDate week2D1 = dateNow.minusDays(dateNow.getDayOfWeek().compareTo(DayOfWeek.MONDAY));
 		LocalDate week2D2 = week2D1.plusDays(6);
 		
-		String week2Date1 = week2D1.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
-		String week2Date2 = week2D2.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+		String week2Date1 = week2D1.format(
+			      DateTimeFormatter.ofPattern(
+			    	        "dd-MMM-yyyy"));
+		String week2Date2 = week2D2.format(
+			      DateTimeFormatter.ofPattern(
+			    	        "dd-MMM-yyyy"));
 		
 		
 		LocalDate week1D1= week2D1.minusDays(7);
 		LocalDate week1D2= week2D1.minusDays(1);
 		
-		String week1Date1 = week1D1.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
-		String week1Date2 = week1D2.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+		String week1Date1 = week1D1.format(
+			      DateTimeFormatter.ofPattern(
+			    	        "dd-MMM-yyyy"));
+		String week1Date2 = week1D2.format(
+			      DateTimeFormatter.ofPattern(
+			    	        "dd-MMM-yyyy"));
 		
-		
-		LocalDate today =LocalDate.now();
+		LocalDate today =LocalDate.now(TimeZone.getTimeZone("America/New_York").toZoneId());
 		int i = today.getDayOfWeek().compareTo(DayOfWeek.WEDNESDAY);
 		
 	
@@ -198,10 +206,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 				LocalDate week1Date = LocalDate.of(y,m,d);
 				int v = week1Date.getDayOfWeek().getValue() - 1;
 			out.println("<tr><td>"+week1Date+"</td>"+"<td>"+week1Date.getDayOfWeek()+"<td><input type ='number' step='0.01' min='0' name='"+week1Date.getDayOfWeek().name().toLowerCase()+"Hours' value='"+update.day[v][0]+"'></td><td><input type ='number' step='0.01' min='0' name='"+week1Date.getDayOfWeek().name().toLowerCase()+"Overtime' value='"+update.day[v][1]+"'></td></tr>");
-						
-					
-				
-				
+			
 			week1D1 = week1D1.plusDays(1);
 			}
 			out.println("</table></br>");
@@ -213,7 +218,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 			out.println("<form action='submitTimesheet' method='post'>");
 			out.println("<input type='hidden' name='periodFrom' value='"+week2Date1+"'>");
 			out.println("<input type='hidden' name='periodTo' value='"+week2Date2+"'>");
-			LocalDate date = LocalDate.now();
+			LocalDate date = LocalDate.now(TimeZone.getTimeZone("America/New_York").toZoneId());
 			LocalDate date1 = date.minusDays(date.getDayOfWeek().compareTo(DayOfWeek.MONDAY));
 			out.println("<center><table>");
 			out.println("<tr><th colspan=\"2\">"+ week2Date1+" to " +week2Date2+"</th><th>"+((User)request.getSession().getAttribute("authorisedAuth")).getCompany()+"</th><th>"+((User)request.getSession().getAttribute("authorisedAuth")).getName()+"</th></tr>");
@@ -241,11 +246,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 			out.println("<input type=\"submit\" class=\"login100-form-btn\" value=\"Update\"></center>");
 			out.println("</form>");
 		}
-		
-		
-		
-		
-		
+	
 		%>
        
       <center> <font color="red"><b>${msg}</b></font></center>

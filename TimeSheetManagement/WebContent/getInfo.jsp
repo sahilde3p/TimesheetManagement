@@ -14,14 +14,28 @@
 <style>
 
 
- th, td {
-    border: 1px solid black;
-    padding: 5px;
-}
-table {
-    border-spacing: 0px;
+
+ table {
+ 	
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+    
 }
 
+th, td {
+    text-align: left;
+    padding: 8px;
+    color: black;
+}
+tr:nth-child(even){background-color: #f2f2f2}
+tr:nth-child(odd){background-color: #ffffff}
+th { 
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}
 
 #sign 
 {
@@ -120,6 +134,8 @@ if(request.getAttribute("period")!=null){
 <% 
 DecimalFormat df = new DecimalFormat("#.##");
 if(request.getAttribute("timesheet")!=null){
+	
+	out.println("<div style=\"overflow-x:auto;\">");
 	out.println("<table>");
 	out.println("<tr>");
 
@@ -136,6 +152,7 @@ if(request.getAttribute("timesheet")!=null){
 	}
 	
 	out.println("</table>");
+	out.println("</div>");
 	out.println("<br>Total Hours:<b> "+df.format(hours)+"</b><br>");
 	out.println("Total Overtime: <b>"+df.format(overtime)+"<b>");
 }

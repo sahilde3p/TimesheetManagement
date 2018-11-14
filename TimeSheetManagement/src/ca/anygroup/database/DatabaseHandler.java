@@ -34,7 +34,7 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		}
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/timesheet", "root", "12345678");
+			con = DriverManager.getConnection("jdbc:mysql://timesheet.cswnkb4qnsg1.us-east-2.rds.amazonaws.com/timesheet", "sahilde3p", "Sahil7172");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -189,7 +189,7 @@ public class DatabaseHandler {
 	} catch (SQLException e) {
 	
 		e.printStackTrace();
-		System.exit(0);
+		
 	}
 	finally {
 		disconnect();

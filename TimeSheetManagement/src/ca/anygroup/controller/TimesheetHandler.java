@@ -223,6 +223,7 @@ public class TimesheetHandler {
 		for(Timesheet t : list)
 		{
 			
+			
 			String day = t.getDate().getDayOfWeek().name();
 			switch(day)
 			{

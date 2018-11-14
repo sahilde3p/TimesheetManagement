@@ -13,14 +13,28 @@
 <style>
 
 
- th, td {
-    border: 1px solid black;
-    padding: 5px;
-}
-table {
-    border-spacing: 0px;
+
+ table {
+ 	
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+    
 }
 
+th, td {
+    text-align: left;
+    padding: 8px;
+    color: black;
+}
+tr:nth-child(even){background-color: #f2f2f2}
+tr:nth-child(odd){background-color: #ffffff}
+th { 
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}
 
 #sign 
 {
@@ -95,6 +109,7 @@ if(request.getAttribute("periods")!=null){
 }
 %>
 </form>
+<div class="table-container">
 <table>
 
 <%
@@ -121,7 +136,7 @@ out.println("<tr><td>"+m.getKey()+"</td><td>"+df.format((((UpdatedTimesheetWithN
 }
 %>
 </table>
-  
+  </div>
  
 </div>
   

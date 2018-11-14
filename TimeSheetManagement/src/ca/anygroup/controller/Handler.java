@@ -1,7 +1,5 @@
 package ca.anygroup.controller;
 
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -258,7 +256,7 @@ public class Handler {
 	@RequestMapping("/addAuth/{email}")
 	public String authorize(@PathVariable("email") String email,ModelMap model)
 	{
-		System.out.println(email);
+		
 		if(new DatabaseHandler().authorizeUser(email)) {
 			model.put("msg", "User Successfull authorised");
 			return "authorize";
@@ -273,7 +271,7 @@ public class Handler {
 	@RequestMapping("/revokeAuth/{email}")
 	public String unAuthorize(@PathVariable("email") String email,ModelMap model)
 	{
-		System.out.println(email);
+		
 		if(new DatabaseHandler().unAuthorizeUser(email)) {
 			model.put("msg", "User Successfull unauthorised");
 			return "authorize";
@@ -288,7 +286,7 @@ public class Handler {
 	@RequestMapping("/deleteUser/{email}")
 	public String deleteUser(@PathVariable("email") String email,ModelMap model)
 	{
-		System.out.println(email);
+		
 		if(new DatabaseHandler().deleteUser(email)) {
 			model.put("msg", "User Successfull deleted");
 			return "authorize";
